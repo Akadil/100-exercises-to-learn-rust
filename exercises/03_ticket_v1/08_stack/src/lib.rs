@@ -6,16 +6,19 @@ mod tests {
 
     #[test]
     fn u16_size() {
-        assert_eq!(size_of::<u16>(), todo!());
+        // println!("Size of u16: {} bytes", size_of::<u16>());
+        assert_eq!(size_of::<u16>(), 2);
     }
 
     #[test]
     fn i32_size() {
-        assert_eq!(size_of::<i32>(), todo!());
+        // println!("Size of i32: {} bytes", size_of::<i32>());
+        assert_eq!(size_of::<i32>(), 4);
     }
 
     #[test]
     fn bool_size() {
-        assert_eq!(size_of::<bool>(), todo!());
+        // println!("Size of bool: {} bytes", size_of::<bool>());
+        assert_eq!(size_of::<bool>(), 1);
     }
 }

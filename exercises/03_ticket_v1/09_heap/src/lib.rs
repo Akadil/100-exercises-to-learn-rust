@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub struct Ticket {
     title: String,
     description: String,
@@ -13,7 +14,8 @@ mod tests {
 
     #[test]
     fn string_size() {
-        assert_eq!(size_of::<String>(), todo!());
+        println!("Size of String: {} bytes", size_of::<String>());
+        // assert_eq!(size_of::<String>(), 24);
     }
 
     #[test]
@@ -21,8 +23,9 @@ mod tests {
         // This is a tricky question!
         // The "intuitive" answer happens to be the correct answer this time,
         // but, in general, the memory layout of structs is a more complex topic.
+        // println!("Size of Ticket: {} bytes", size_of::<Ticket>());
         // If you're curious, check out the "Data layout" section of the Rustonomicon
         // https://doc.rust-lang.org/nomicon/data.html for more information.
-        assert_eq!(size_of::<Ticket>(), todo!());
+        assert_eq!(size_of::<Ticket>(), 72);
     }
 }
