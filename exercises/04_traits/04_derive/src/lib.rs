@@ -9,6 +9,8 @@
 // If the compared type doesn't implement `Debug`, it doesn't know how to represent them!
 
 #[derive(PartialEq)]
+#[derive(Debug)]
+#[allow(dead_code)]
 struct Ticket {
     title: String,
     description: String,
@@ -34,6 +36,7 @@ mod tests {
             description: description.to_string(),
             status: status.to_string(),
         };
+        // println!("are they equal? -> {}", ticket1 == ticket2);
         assert_eq!(ticket1, ticket2);
     }
 
