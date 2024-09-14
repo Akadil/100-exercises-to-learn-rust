@@ -11,17 +11,22 @@ enum TicketNewError {
 //   stored inside the relevant variant of the `TicketNewError` enum.
 //   When the description is invalid, instead, it should use a default description:
 //   "Description not provided".
+#[allow(dead_code)]
 fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
     match Ticket::new(title.clone(), description, status.clone()) {
         Ok(ticket) => ticket,
-        Err(error) => {
-            match error {
-                TicketNewError::Description(_) => {
-                    Ticket::new(title, "Description not provided".to_string(), status).unwrap()
-                },
-                TicketNewError::Title(message) => panic!("{}", message),
-            }
-        },
+        // Err(error) => {
+        //     match error {
+        //         TicketNewError::Description(_) => {
+        //             Ticket::new(title, "Description not provided".to_string(), status).unwrap()
+        //         },
+        //         TicketNewError::Title(message) => panic!("{}", message),
+        //     }
+        // },
+        Err(TicketNewError::Description(_)) => {
+            Ticket::new(title, "Description not provided".to_string(), status).unwrap()
+        }
+        Err(TicketNewError::Title(error)) => panic!("{error}"),
     }
 }
 
