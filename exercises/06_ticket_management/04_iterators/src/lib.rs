@@ -10,11 +10,42 @@ pub struct TicketStore {
     tickets: Vec<Ticket>,
 }
 
+/*
+    trait IntoIterator {
+        type Item;
+        type IntoIter: Iterator<Item = Self::Item>;
+ 
+        fn into_iter(self) -> Self::IntoIter;
+    }
+*/
 impl IntoIterator for TicketStore {
     type Item = Ticket;
-    type IntoIter = std::vec::IntoIter<Ticket>;
+    type IntoIter = std::vec::IntoIter<Self::Item>; // builtin struct for IntoIter
 
     fn into_iter(self) -> Self::IntoIter {
+        /*
+            self.tickets.into_iter() returns an IntoIter struct
+        
+            pub struct IntoIter<T> {
+                buf: ManuallyDrop<Vec<T>>,  // Holds the vector's memory buffer
+                iter: *const T,             // Pointer to the current element
+                end: *const T,              // Pointer to one past the last element
+            }
+
+            impl<T> IntoIterator for Vec<T> {
+                type Item = T;
+                type IntoIter = std::vec::IntoIter<T>;
+
+                fn into_iter(self) -> Self::IntoIter {
+                    // Consumes `self` and returns an iterator
+                    IntoIter {
+                        buf: ManuallyDrop::new(self),
+                        iter: self.as_ptr(),
+                        end: unsafe { self.as_ptr().add(self.len()) },
+                    }
+                }
+            }
+        */
         self.tickets.into_iter()
     }
 }
@@ -70,7 +101,10 @@ mod tests {
         };
         store.add_ticket(ticket);
 
-        let tickets: Vec<_> = store.clone().into_iter().collect();
+        /*
+            collect() transforms an iterator into a collection,
+        */
+        let tickets: Vec<_> = store.clone().into_iter().collect(); 
         assert_eq!(tickets, store.tickets);
     }
 }
