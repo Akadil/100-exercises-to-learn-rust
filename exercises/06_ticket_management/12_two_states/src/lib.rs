@@ -8,11 +8,6 @@
 
 use ticket_fields::{TicketDescription, TicketTitle};
 
-#[derive(Clone)]
-pub struct TicketStore {
-    tickets: Vec<Ticket>,
-}
-
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct TicketId(u64);
 
@@ -37,18 +32,43 @@ pub enum Status {
     Done,
 }
 
+/* ********************************** Ticket store ********************************** */
+mod id_manager;
+
+use id_manager::IdManager;
+
+#[derive(Clone)]
+pub struct TicketStore {
+    id_manager: IdManager,
+    tickets: Vec<Ticket>,
+}
+
 impl TicketStore {
     pub fn new() -> Self {
         Self {
+            id_manager: IdManager::new(),
             tickets: Vec::new(),
         }
     }
 
-    pub fn add_ticket(&mut self, ticket: Ticket) {
+    pub fn add_ticket(&mut self, ticket_draft: TicketDraft) -> u64 {
+        let id = self.id_manager.get_id();
+        let ticket = Ticket {
+            id: TicketId(id),
+            title: ticket_draft.title,
+            description: ticket_draft.description,
+            status: Status::ToDo,
+        };
         self.tickets.push(ticket);
+        return id;
+    }
+
+    pub fn get(&self, id: u64) -> Option<&Ticket> {
+        self.tickets.get(id as usize)
     }
 }
 
+/* ********************************** Test cases ********************************** */
 #[cfg(test)]
 mod tests {
     use crate::{Status, TicketDraft, TicketStore};
