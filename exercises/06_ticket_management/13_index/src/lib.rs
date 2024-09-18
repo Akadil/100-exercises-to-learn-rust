@@ -58,6 +58,32 @@ impl TicketStore {
     }
 }
 
+/*
+    // Slightly simplified
+    pub trait Index<Idx>
+    {
+        type Output;
+
+        // Required method
+        fn index(&self, index: Idx) -> &Self::Output;
+    }
+*/
+impl std::ops::Index<TicketId> for TicketStore {
+    type Output = Ticket;
+
+    fn index(&self, index: TicketId) -> &Self::Output {
+        self.get(index).unwrap()
+    }
+}
+
+impl std::ops::Index<&TicketId> for TicketStore {
+    type Output = Ticket;
+
+    fn index(&self, index: &TicketId) -> &Self::Output {
+        self.get(*index).unwrap()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{Status, TicketDraft, TicketStore};
