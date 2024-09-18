@@ -6,9 +6,6 @@ pub struct TicketStore {
     tickets: Vec<Ticket>,
 }
 
-impl TicketStore {
-}
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct Ticket {
     title: TicketTitle,
@@ -34,7 +31,7 @@ impl TicketStore {
         self.tickets.push(ticket);
     }
     
-    pub fn iter(&self) -> impl Iterator<Item = &Ticket> {
+    pub fn iter(&self) -> std::slice::Iter<Ticket> {
         self.tickets.iter()
     }
 }
