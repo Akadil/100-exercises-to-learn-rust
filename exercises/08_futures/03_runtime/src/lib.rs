@@ -11,14 +11,15 @@ pub async fn echo<T>(listener: TcpListener, reply: Arc<T>) -> Result<(), anyhow:
 where
     T: Display + Send + Sync + 'static,
 {
-    loop {
+    let var = 1;
+
+    while var == 1 {
         let (mut socket, _) = listener.accept().await?;
-        let (mut reader, mut writer) = socket.split();
+        let (_, mut writer) = socket.split();
 
         // tokio::io::copy(&mut reply, &mut writer).await?;
         writer.write(format!("{}", reply).as_bytes()).await.unwrap();
     }
-    
     Ok(())
 }
 
@@ -33,8 +34,8 @@ where
 
     let outcome1 = tokio::try_join!(task_one);
     let outcome2  = tokio::try_join!(task_two);
-    outcome1.unwrap();
-    outcome2.unwrap(); 
+    outcome1.unwrap().0.unwrap();
+    outcome2.unwrap().0.unwrap(); 
 
 }
 
