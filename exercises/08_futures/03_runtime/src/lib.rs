@@ -1,16 +1,41 @@
+use core::task;
 // TODO: Implement the `fixed_reply` function. It should accept two `TcpListener` instances,
 //  accept connections on both of them concurrently, and always reply to clients by sending
 //  the `Display` representation of the `reply` argument as a response.
 use std::fmt::Display;
+use std::sync::Arc;
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
+
+pub async fn echo<T>(listener: TcpListener, reply: Arc<T>) -> Result<(), anyhow::Error> 
+where
+    T: Display + Send + Sync + 'static,
+{
+    loop {
+        let (mut socket, _) = listener.accept().await?;
+        let (mut reader, mut writer) = socket.split();
+
+        // tokio::io::copy(&mut reply, &mut writer).await?;
+        writer.write(format!("{}", reply).as_bytes()).await.unwrap();
+    }
+    
+    Ok(())
+}
 
 pub async fn fixed_reply<T>(first: TcpListener, second: TcpListener, reply: T)
 where
     // `T` cannot be cloned. How do you share it between the two server tasks?
     T: Display + Send + Sync + 'static,
 {
-    todo!()
+    let reply = Arc::new(reply);
+    let task_one = tokio::spawn(echo(first, Arc::clone(&reply)));
+    let task_two = tokio::spawn(echo(second, reply));
+
+    let outcome1 = tokio::try_join!(task_one);
+    let outcome2  = tokio::try_join!(task_two);
+    outcome1.unwrap();
+    outcome2.unwrap(); 
+
 }
 
 #[cfg(test)]

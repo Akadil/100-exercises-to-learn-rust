@@ -18,9 +18,10 @@ pub async fn echoes(first: TcpListener, second: TcpListener) -> Result<(), anyho
     let task_one = tokio::spawn(echo(first));
     let task_two = tokio::spawn(echo(second));
 
-    let (outcome1, outcome2) = tokio::join!(task_one, task_two);
-    outcome1??;
-    outcome2??;
+    let outcome_1 = tokio::try_join!(task_one);
+    let outcome_2 = tokio::try_join!(task_two);
+    outcome_1?.0?;
+    outcome_2?.0?;
     Ok(())
 }
 
