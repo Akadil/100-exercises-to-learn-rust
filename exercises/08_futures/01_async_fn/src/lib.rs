@@ -1,4 +1,4 @@
-use tokio::net::TcpListener;
+use tokio::{io::AsyncWriteExt, net::TcpListener};
 
 // TODO: write an echo server that accepts incoming TCP connections and
 //  echoes the received data back to the client.
@@ -16,6 +16,7 @@ pub async fn echo(listener: TcpListener) -> Result<(), anyhow::Error> {
         let (mut reader, mut writer) = socket.split();
 
         tokio::io::copy(&mut reader, &mut writer).await?;
+        writer.shutdown().await?;
     }
 
     Ok(())

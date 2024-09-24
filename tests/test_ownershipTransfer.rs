@@ -14,6 +14,6 @@ fn main() {
     println!("s1: {}", s1);
 
     let s2 = s1;
-    println!("s1: {}", s1); // This will throw an error because s1 has been moved to s2
+    // println!("s1: {}", s1); // This will throw an error because s1 has been moved to s2
     println!("s2: {}", s2);
 }
